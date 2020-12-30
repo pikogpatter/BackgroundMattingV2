@@ -7,7 +7,7 @@ class HomographicAlignment:
     """
     Apply homographic alignment on background to match with the source image.
     """
-    
+
     def __init__(self):
         self.detector = cv2.ORB_create()
         self.matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE)
@@ -36,11 +36,11 @@ class HomographicAlignment:
         bgr = cv2.warpPerspective(bgr, H, (w, h))
         msk = cv2.warpPerspective(np.ones((h, w)), H, (w, h))
 
-        # For areas that is outside of the background, 
+        # For areas that is outside of the background,
         # We just copy pixels from the source.
         bgr[msk != 1] = src[msk != 1]
 
         src = Image.fromarray(src)
         bgr = Image.fromarray(bgr)
-        
+
         return src, bgr

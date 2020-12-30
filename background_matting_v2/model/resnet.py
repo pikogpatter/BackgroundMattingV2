@@ -10,27 +10,28 @@ class ResNetEncoder(ResNet):
     used for classification. The forward method  additionally returns the feature
     maps at all resolutions for decoder's use.
     """
-    
+
     layers = {
-        'resnet50':  [3, 4, 6, 3],
-        'resnet101': [3, 4, 23, 3],
+        "resnet50": [3, 4, 6, 3],
+        "resnet101": [3, 4, 23, 3],
     }
-    
-    def __init__(self, in_channels, variant='resnet101', norm_layer=None):
+
+    def __init__(self, in_channels, variant="resnet101", norm_layer=None):
         super().__init__(
             block=Bottleneck,
             layers=self.layers[variant],
             replace_stride_with_dilation=[False, False, True],
-            norm_layer=norm_layer)
-        
+            norm_layer=norm_layer,
+        )
+
         # Replace first conv layer if in_channels doesn't match.
         if in_channels != 3:
             self.conv1 = nn.Conv2d(in_channels, 64, 7, 2, 3, bias=False)
-            
+
         # Delete fully-connected layer
         del self.avgpool
         del self.fc
-    
+
     def forward(self, x):
         x0 = x  # 1/1
         x = self.conv1(x)

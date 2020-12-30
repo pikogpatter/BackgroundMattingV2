@@ -6,29 +6,29 @@ class MobileNetV2Encoder(MobileNetV2):
     """
     MobileNetV2Encoder inherits from torchvision's official MobileNetV2. It is modified to
     use dilation on the last block to maintain output stride 16, and deleted the
-    classifier block that was originally used for classification. The forward method 
+    classifier block that was originally used for classification. The forward method
     additionally returns the feature maps at all resolutions for decoder's use.
     """
-    
+
     def __init__(self, in_channels, norm_layer=None):
         super().__init__()
-        
+
         # Replace first conv layer if in_channels doesn't match.
         if in_channels != 3:
             self.features[0][0] = nn.Conv2d(in_channels, 32, 3, 2, 1, bias=False)
-       
+
         # Remove last block
         self.features = self.features[:-1]
-        
+
         # Change to use dilation to maintain output stride = 16
         self.features[14].conv[1][0].stride = (1, 1)
         for feature in self.features[15:]:
             feature.conv[1][0].dilation = (2, 2)
             feature.conv[1][0].padding = (2, 2)
-        
+
         # Delete classifier
         del self.classifier
-        
+
     def forward(self, x):
         x0 = x  # 1/1
         x = self.features[0](x)
