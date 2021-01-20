@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="background_matting_v2",
-    version="0.0.1",
+    version="0.0.2",
     zip_safe=False,
     include_package_data=True,
     package_data={"background_matting_v2": ["py.typed"]},
